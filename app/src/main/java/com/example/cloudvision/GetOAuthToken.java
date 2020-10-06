@@ -10,6 +10,8 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import java.io.IOException;
 
+// Получение токена аутентификации
+// для сетевых операций используется - AsyncTask 
 public class GetOAuthToken extends AsyncTask<Void, Void, Void> {
     Activity mActivity;
     Account mAccount;
@@ -23,6 +25,7 @@ public class GetOAuthToken extends AsyncTask<Void, Void, Void> {
         this.mRequestCode = requestCode;
     }
 
+    // 
     @Override
     protected Void doInBackground(Void... params) {
         try {
@@ -36,6 +39,7 @@ public class GetOAuthToken extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
+    // получение токена доступа (авторизация)
     protected String fetchToken() throws IOException {
         String accessToken;
         try {

@@ -53,9 +53,16 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_ACCOUNT_AUTHORIZATION = 102;
     static final int REQUEST_PERMISSIONS = 13;
 
+    // токен доступа
     private static String accessToken;
+    
+    // выбранное изображение
     private ImageView selectedImage;
+    
+    // распознанные метки
     private TextView labelResults;
+    
+    // распознанный текст
     private TextView textResults;
     private Account mAccount;
     private ProgressDialog mProgressDialog;
@@ -68,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         mProgressDialog = new ProgressDialog(this);
 
+        // кнопка выбора изображения
         Button selectImageButton = findViewById(R.id.select_image_button);
         selectedImage = findViewById(R.id.selected_image);
         labelResults = findViewById(R.id.tv_label_results);
@@ -84,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    // запрос прав доступа
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -98,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // обработка запросов (изображение, наличие аккаунта, авторизация)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -130,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // выболенине запроса Cloud Vision
     public void performCloudVisionRequest(Uri uri) {
         if (uri != null) {
             try {
@@ -143,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // запуск Cloud Vision
     @SuppressLint("StaticFieldLeak")
     private void callCloudVision(final Bitmap bitmap) throws IOException {
         mProgressDialog = ProgressDialog.show(this, null,"Сканирование картинки. Ждите...", true);
@@ -197,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
 
+            // установка текста и меток
             protected void onPostExecute(BatchAnnotateImagesResponse response) {
                 mProgressDialog.dismiss();
                 if(getDetectedLabels(response) != "")
@@ -214,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
+    // получение распознанных меток
     private String getDetectedLabels(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder("");
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
@@ -230,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
         return message.toString();
     }
 
+    // получение распознанного текста
     private String getDetectedTexts(BatchAnnotateImagesResponse response){
         StringBuilder message = new StringBuilder("");
         List<EntityAnnotation> texts = response.getResponses().get(0)
@@ -246,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
         return message.toString();
     }
 
+    // масштабирование изображения
     public Bitmap resizeBitmap(Bitmap bitmap) {
 
         int maxDimension = 1024;
@@ -267,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
+    // запуск выбора изображения
     private void launchImagePicker() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -275,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
                 REQUEST_GALLERY_IMAGE);
     }
 
+    // преобразование bitmap в изображение jpeg
     public Image getBase64EncodedJpeg(Bitmap bitmap) {
         Image image = new Image();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -284,6 +301,7 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    // использование пользовательского аккаунта
     private void pickUserAccount() {
         String[] accountTypes = new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE};
         Intent intent = AccountPicker.newChooseAccountIntent(null, null,
@@ -291,6 +309,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
     }
 
+    // получение токена авторазации 
     private void getAuthToken() {
         String SCOPE = "oauth2:https://www.googleapis.com/auth/cloud-platform";
         if (mAccount == null) {
@@ -301,6 +320,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // при получении токена
     public void onTokenReceived(String token){
         accessToken = token;
         launchImagePicker();
