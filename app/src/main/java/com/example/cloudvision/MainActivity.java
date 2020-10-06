@@ -47,7 +47,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = "CloudVisionExample";
+    private final String TAG = "";
     static final int REQUEST_GALLERY_IMAGE = 100;
     static final int REQUEST_CODE_PICK_ACCOUNT = 101;
     static final int REQUEST_ACCOUNT_AUTHORIZATION = 102;
@@ -83,13 +83,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void launchImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Выбор картинки"),
-                REQUEST_GALLERY_IMAGE);
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -205,8 +199,16 @@ public class MainActivity extends AppCompatActivity {
 
             protected void onPostExecute(BatchAnnotateImagesResponse response) {
                 mProgressDialog.dismiss();
-                textResults.setText(getDetectedTexts(response));
-                labelResults.setText(getDetectedLabels(response));
+                if(getDetectedLabels(response) != "")
+                    labelResults.setText(getDetectedLabels(response));
+                else
+                    labelResults.setText("Объекты не обнаружены!");
+
+                if(getDetectedTexts(response) != "")
+                    textResults.setText(getDetectedTexts(response));
+                else
+                    textResults.setText("Текст не обнаружен!");
+
             }
 
         }.execute();
@@ -217,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
         if (labels != null) {
             for (EntityAnnotation label : labels) {
-                message.append(String.format(Locale.getDefault(), "%.3f: %s",
-                        label.getScore(), label.getDescription()));
+                message.append(String.format(Locale.getDefault(), "Вер.-ть того, что на картинке %s - %.3f",
+                        label.getDescription(), label.getScore()));
                 message.append("\n");
             }
         } else {
@@ -234,12 +236,11 @@ public class MainActivity extends AppCompatActivity {
                 .getTextAnnotations();
         if (texts != null) {
             for (EntityAnnotation text : texts) {
-                message.append(String.format(Locale.getDefault(), "%s: %s",
-                        text.getLocale(), text.getDescription()));
+                message.append(String.format(Locale.getDefault(), "%s", text.getDescription()));
                 message.append("\n");
             }
         } else {
-            message.append("nothing\n");
+            //message.append("nothing\n");
         }
 
         return message.toString();
@@ -264,6 +265,14 @@ public class MainActivity extends AppCompatActivity {
             resizedWidth = maxDimension;
         }
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    private void launchImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Выбор картинки"),
+                REQUEST_GALLERY_IMAGE);
     }
 
     public Image getBase64EncodedJpeg(Bitmap bitmap) {

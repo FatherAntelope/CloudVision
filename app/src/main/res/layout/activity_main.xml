@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/selected_image"
@@ -13,39 +14,49 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
 
-    <TextView
-        android:id="@+id/labels"
-        android:text="Распознанные объекты:"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ScrollView
         android:layout_below="@+id/selected_image"
-        android:layout_marginTop="10dp"/>
-
-    <TextView
-        android:id="@+id/tv_label_results"
-        android:text="-"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/labels"
-        android:layout_marginTop="10dp"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/texts"
-        android:text="Распознанный текст:"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_label_results"
-        android:layout_marginTop="10dp"/>
+        <LinearLayout
 
-    <TextView
-        android:id="@+id/tv_texts_results"
-        android:text="-"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/texts"
-        android:layout_marginTop="15dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+
+            <TextView
+                android:id="@+id/labels"
+                android:text="Распознанные объекты:"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_label_results"
+                android:text="Выберите картинку"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/texts"
+                android:text="Распознанный текст:"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_texts_results"
+                android:text="Выберите картинку"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"/>
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/select_image_button"
@@ -54,6 +65,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="Выбрать картинку"
-        android:layout_marginBottom="10px"/>
-
+        android:paddingHorizontal="5dp"
+        android:textColor="@android:color/white"
+        android:background="#673AB7"
+        android:layout_marginBottom="10dp"/>
 </RelativeLayout>
